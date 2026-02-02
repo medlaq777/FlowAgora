@@ -95,7 +95,7 @@ The project is organized into 14 Epics to ensure full coverage of the technical 
 1. **Clone the repo:**
 
    ```bash
-   git clone [https://github.com/medlaq777/FlowAgora.git](https://github.com/medlaq777/FlowAgora.git)
+   git clone https://github.com/medlaq777/FlowAgora.git
 
 2. **Setup Environment:**
 
