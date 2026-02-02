@@ -12,7 +12,7 @@ This project addresses the challenges of manual event management (spreadsheets, 
 * [Features](#-features)
 * [Tech Stack](#-tech-stack)
 * [Business Rules](#️-business-rules)
-* [Project Management (JIRA)](#-project-management-jira)
+* [JIRA Roadmap & Planning](#-jira-roadmap--planning)
 * [Getting Started](#-getting-started)
 * [CI/CD Pipeline](#️-cicd-pipeline-github-actions)
 
@@ -42,14 +42,19 @@ Managing workshops, training sessions, and internal meetings manually often lead
 | Download PDF Ticket | ❌ | ✅ (If Confirmed) |
 | Access Stats Dashboard | ✅ | ❌ |
 
-### 🛠 Technical Highlights
+## 📊 JIRA Roadmap & Planning
 
-* **Backend:** Modular NestJS architecture with JWT Authentication and DTO validation.
-* **Frontend:** Next.js with Hybrid Rendering (SSR for SEO/Public pages, CSR for Dashboards).
-* **Testing:** Comprehensive Unit and E2E testing for both Front and Back ends.
-* **DevOps:** Fully containerized environment using Docker.
+The project is organized into 14 Epics to ensure full coverage of the technical and functional requirements.
 
----
+### Key Epics
+
+1. **Project Management:** JIRA/GitHub integration & automation rules.
+2. **Auth System:** JWT implementation & Role-based guards (Admin/Participant).
+3. **Event Engine:** CRUD operations and lifecycle management (Drft/Published/Canceled).
+4. **Booking Logic:** Capacity validation, duplicate preention, and PDF ticket generation.
+5. **Front-end Architecture:** Hybrid rendering (SSR for SEO, CSRfor Dashboards).
+6. **Quality Assurance:** Mandatory Unit and E2E testing for bot layers.
+7. **DevOps:** Dockerization and GitHub Actions CI/CD pipeline.
 
 ## ⚖️ Business Rules
 
@@ -75,17 +80,6 @@ Managing workshops, training sessions, and internal meetings manually often lead
 * **Backend:** NestJS, TypeScript, MongoDB (Mongoose).
 * **Testing:** Jest, SonarQube, React Testing Library.
 * **Infrastructure:** Docker, Docker Compose, GitHub Actions (CI/CD).
-
----
-
-## 📊 Project Management (JIRA)
-
-This project follows a strict Agile methodology:
-
-* **Hierarchy:** Epics -> User Stories -> Tasks -> Sub-tasks.
-* **Integration:** GitHub is linked to JIRA.
-* **Automation:** Moving a task to "Done" automatically via PR Merges.
-* **Traceability:** Every commit message must include the JIRA ticket reference (e.g., `feat: [SC2-15] add jwt strategy`).
 
 ---
 
@@ -134,4 +128,4 @@ The project includes a mandatory pipeline that triggers on every `push` and `pul
 
 ## 📝 Author
 
-Developed as part of a professional training project focusing on software quality and industrialization.
+Developed as part of the YOUCODE | UM6P curriculum (2024-2026).
