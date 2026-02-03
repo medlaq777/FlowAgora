@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { EventModel, EventDocument } from '../../infrastructure/persistence/event.schema';
+import { EventModel, EventDocument } from '../infrastructure/persistence/event.schema';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
-import { EventStatus } from '../../domain/entities/event.entity';
+import { EventStatus } from '../domain/entities/event.entity';
 
 @Injectable()
 export class EventsService {
