@@ -16,9 +16,6 @@ export class AuthService implements IAuthService {
     const user = await this.usersService.findByEmail(email);
     if (user && (await bcrypt.compare(pass, user.password || ''))) {
       const { password, ...result } = user;
-      // Re-construct User or return partial.
-      // Since validateUser is internal to Auth guard usually, returning the user entity (sans password contextually) is OK.
-      // However, spread on class instance 'user' might not work as expected if it has methods, but 'User' looks like a DTO/Entity data holder.
       return result as User;
     }
     return null;

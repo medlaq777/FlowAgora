@@ -31,8 +31,8 @@ export class UserRepositoryImpl implements IUserRepository {
     return new User(
       userDocument._id.toString(),
       userDocument.email,
-      userDocument.password,
       userDocument.role as 'ADMIN' | 'PARTICIPANT',
+      userDocument.password,
       userDocument.firstName,
       userDocument.lastName,
     );
