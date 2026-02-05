@@ -29,7 +29,7 @@ export class ReservationsService {
     const existingReservation = await this.reservationModel.findOne({
       userId,
       eventId,
-      status: { $ne: ReservationStatus.CANCELED },
+      status: { $nin: [ReservationStatus.CANCELED, ReservationStatus.REFUSED] },
     }).exec();
 
     if (existingReservation) {
@@ -38,7 +38,7 @@ export class ReservationsService {
 
     const reservationCount = await this.reservationModel.countDocuments({
       eventId,
-      status: { $ne: ReservationStatus.CANCELED },
+      status: { $nin: [ReservationStatus.CANCELED, ReservationStatus.REFUSED] },
     }).exec();
 
     if (reservationCount >= event.capacity) {
@@ -52,5 +52,17 @@ export class ReservationsService {
     });
 
     return newReservation.save();
+  }
+
+  async updateStatus(id: string, status: ReservationStatus): Promise<ReservationDocument> {
+    const reservation = await this.reservationModel
+      .findByIdAndUpdate(id, { status }, { new: true })
+      .exec();
+
+    if (!reservation) {
+      throw new NotFoundException(`Reservation with ID ${id} not found`);
+    }
+
+    return reservation;
   }
 }
