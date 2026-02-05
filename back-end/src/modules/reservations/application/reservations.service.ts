@@ -111,4 +111,12 @@ export class ReservationsService {
       doc.end();
     });
   }
+
+  async findByEvent(eventId: string): Promise<ReservationDocument[]> {
+    return this.reservationModel.find({ eventId }).exec();
+  }
+
+  async findByUser(userId: string): Promise<ReservationDocument[]> {
+    return this.reservationModel.find({ userId }).exec();
+  }
 }

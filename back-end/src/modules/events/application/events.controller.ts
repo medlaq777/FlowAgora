@@ -13,8 +13,8 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { EventStatus } from '../domain/entities/event.entity';
 import { JwtAuthGuard } from '../../auth/infrastructure/guards/jwt-auth.guard';
-import { RolesGuard } from '../../../common/guards/roles.guard';
-import { Roles } from '../../../common/decorators/roles.decorator';
+import { RolesGuard } from '../../auth/infrastructure/guards/roles.guard';
+import { Roles } from '../../auth/infrastructure/decorators/roles.decorator';
 
 @Controller('events')
 export class EventsController {
@@ -37,6 +37,20 @@ export class EventsController {
   @Roles('ADMIN')
   findAllAdmin() {
     return this.eventsService.findAll();
+  }
+
+  @Get('admin/upcoming')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  findUpcoming() {
+    return this.eventsService.findUpcoming();
+  }
+
+  @Get(':id/stats')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  getStats(@Param('id') id: string) {
+    return this.eventsService.getStats(id);
   }
 
   @Get(':id')

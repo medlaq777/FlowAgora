@@ -6,10 +6,14 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { EventStatus } from '../domain/entities/event.entity';
 
+import { ReservationModel, ReservationDocument } from '../../reservations/infrastructure/persistence/reservation.schema';
+import { ReservationStatus } from '../../reservations/domain/entities/reservation.entity';
+
 @Injectable()
 export class EventsService {
   constructor(
     @InjectModel(EventModel.name) private eventModel: Model<EventDocument>,
+    @InjectModel(ReservationModel.name) private reservationModel: Model<ReservationDocument>,
   ) {}
 
   async create(createEventDto: CreateEventDto): Promise<EventDocument> {
@@ -53,5 +57,28 @@ export class EventsService {
       throw new NotFoundException(`Event with ID ${id} not found`);
     }
     return existingEvent;
+  }
+
+  async findUpcoming(): Promise<EventDocument[]> {
+    return this.eventModel.find({
+      date: { $gte: new Date() },
+      status: EventStatus.PUBLISHED
+    }).exec();
+  }
+
+  async getStats(id: string): Promise<{ capacity: number, reservations: number, fillRate: number }> {
+     const event = await this.findOne(id);
+     const reservations = await this.reservationModel.countDocuments({
+         eventId: id,
+         status: { $nin: [ReservationStatus.CANCELED, ReservationStatus.REFUSED] }
+     }).exec();
+
+     const fillRate = event.capacity > 0 ? (reservations / event.capacity) * 100 : 0;
+
+     return {
+         capacity: event.capacity,
+         reservations,
+         fillRate: parseFloat(fillRate.toFixed(2)),
+     };
   }
 }

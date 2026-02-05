@@ -37,4 +37,18 @@ export class ReservationsController {
 
     res.end(buffer);
   }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @Get('by-event/:eventId')
+  findByEvent(@Param('eventId') eventId: string) {
+    return this.reservationsService.findByEvent(eventId);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @Get('by-user/:userId')
+  findByUser(@Param('userId') userId: string) {
+    return this.reservationsService.findByUser(userId);
+  }
 }
