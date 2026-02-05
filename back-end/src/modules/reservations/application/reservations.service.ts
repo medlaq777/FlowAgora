@@ -1,4 +1,5 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
+import PDFDocument from 'pdfkit';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ReservationModel, ReservationDocument } from '../infrastructure/persistence/reservation.schema';
@@ -64,5 +65,50 @@ export class ReservationsService {
     }
 
     return reservation;
+  }
+
+  async generateTicket(reservationId: string, userId: string): Promise<Buffer> {
+    const reservation = await this.reservationModel.findById(reservationId).exec();
+    if (!reservation) {
+      throw new NotFoundException(`Reservation with ID ${reservationId} not found`);
+    }
+
+    if (reservation.userId !== userId) {
+      // Unless we check for Admin role here, but controller will handle Admin/Owner check better?
+      // For now, restrict to owner. If Admin needs to download, we'd need to pass a flag or check role.
+      // Let's assume strict owner check for this method as per requirement "As a participant I want to download..."
+      // But Admin might want to see it too.
+      // Let's check matching userId.
+      throw new ForbiddenException('You can only download your own ticket');
+    }
+
+    if (reservation.status !== ReservationStatus.CONFIRMED) {
+      throw new BadRequestException('Ticket is only available for CONFIRMED reservations');
+    }
+
+    const event = await this.eventModel.findById(reservation.eventId).exec();
+    if (!event) {
+        throw new NotFoundException('Event not found');
+    }
+
+    return new Promise((resolve) => {
+      const doc = new PDFDocument({ size: 'A4' });
+      const buffers: Buffer[] = [];
+
+      doc.on('data', (chunk) => buffers.push(chunk));
+      doc.on('end', () => resolve(Buffer.concat(buffers)));
+
+      doc.fontSize(25).text('TICKET DE RÉSERVATION', { align: 'center' });
+      doc.moveDown();
+      doc.fontSize(18).text(`Événement: ${event.title}`);
+      doc.fontSize(14).text(`Date: ${event.date}`);
+      doc.text(`Lieu: ${event.location}`);
+      doc.moveDown();
+      doc.text(`Réservé par: ${userId}`); // Ideally User Name if we fetched User
+      doc.text(`ID Réservation: ${reservation.id}`);
+      doc.text(`Statut: ${reservation.status}`);
+      
+      doc.end();
+    });
   }
 }

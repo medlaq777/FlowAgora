@@ -1,4 +1,5 @@
-import { Controller, Post, Body, UseGuards, Request, Patch, Param } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Request, Patch, Param, Get, Res } from '@nestjs/common';
+import type { Response } from 'express';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationStatusDto } from './dto/update-reservation-status.dto';
@@ -21,5 +22,19 @@ export class ReservationsController {
   @Patch(':id/status')
   updateStatus(@Param('id') id: string, @Body() updateStatusDto: UpdateReservationStatusDto) {
     return this.reservationsService.updateStatus(id, updateStatusDto.status);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':id/ticket')
+  async generateTicket(@Param('id') id: string, @Request() req, @Res() res: Response) {
+    const buffer = await this.reservationsService.generateTicket(id, req.user.userId);
+    
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename=ticket-${id}.pdf`,
+      'Content-Length': buffer.length,
+    });
+
+    res.end(buffer);
   }
 }
