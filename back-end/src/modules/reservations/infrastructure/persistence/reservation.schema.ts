@@ -18,6 +18,4 @@ export class ReservationModel {
 
 export const ReservationSchema = SchemaFactory.createForClass(ReservationModel);
 
-// Compound index to prevent duplicate reservations explicitly at DB level if desired,
-// but logic will enforce it too.
 ReservationSchema.index({ userId: 1, eventId: 1 }, { unique: true });

@@ -26,7 +26,6 @@ export class ReservationsService {
       throw new BadRequestException('Cannot reserve for an unpublished or canceled event');
     }
 
-    // 3. Check for existing reservation
     const existingReservation = await this.reservationModel.findOne({
       userId,
       eventId,
@@ -37,7 +36,6 @@ export class ReservationsService {
       throw new ConflictException('User already has a reservation for this event');
     }
 
-    // 4. Check Capacity
     const reservationCount = await this.reservationModel.countDocuments({
       eventId,
       status: { $ne: ReservationStatus.CANCELED },
@@ -47,7 +45,6 @@ export class ReservationsService {
       throw new ConflictException('Event is at full capacity');
     }
 
-    // 5. Create Reservation
     const newReservation = new this.reservationModel({
       userId,
       eventId,
