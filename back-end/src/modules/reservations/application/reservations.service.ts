@@ -73,12 +73,7 @@ export class ReservationsService {
       throw new NotFoundException(`Reservation with ID ${reservationId} not found`);
     }
 
-    if (reservation.userId !== userId) {
-      // Unless we check for Admin role here, but controller will handle Admin/Owner check better?
-      // For now, restrict to owner. If Admin needs to download, we'd need to pass a flag or check role.
-      // Let's assume strict owner check for this method as per requirement "As a participant I want to download..."
-      // But Admin might want to see it too.
-      // Let's check matching userId.
+    if (reservation.userId !== userId) {      
       throw new ForbiddenException('You can only download your own ticket');
     }
 
@@ -104,7 +99,7 @@ export class ReservationsService {
       doc.fontSize(14).text(`Date: ${event.date}`);
       doc.text(`Lieu: ${event.location}`);
       doc.moveDown();
-      doc.text(`Réservé par: ${userId}`); // Ideally User Name if we fetched User
+      doc.text(`Réservé par: ${userId}`);
       doc.text(`ID Réservation: ${reservation.id}`);
       doc.text(`Statut: ${reservation.status}`);
       
