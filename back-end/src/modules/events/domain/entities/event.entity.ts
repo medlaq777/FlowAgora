@@ -11,6 +11,7 @@ export class Event {
     public readonly description: string,
     public readonly date: Date,
     public readonly location: string,
+    public readonly capacity: number,
     public readonly status: EventStatus = EventStatus.DRAFT,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,

@@ -18,7 +18,10 @@ export class EventModel {
   @Prop({ required: true })
   location: string;
 
-  @Prop({ required: true, enum: EventStatus, default: EventStatus.DRAFT })
+  @Prop({ required: true })
+  capacity: number;
+
+  @Prop({ required: true, type: String, enum: EventStatus, default: EventStatus.DRAFT })
   status: EventStatus;
 }
 
