@@ -17,13 +17,11 @@ export class ReservationsService {
   async create(createReservationDto: CreateReservationDto, userId: string): Promise<ReservationDocument> {
     const { eventId } = createReservationDto;
 
-    // 1. Fetch Event
     const event = await this.eventModel.findById(eventId).exec();
     if (!event) {
       throw new NotFoundException(`Event with ID ${eventId} not found`);
     }
 
-    // 2. Check Event Status
     if (event.status !== EventStatus.PUBLISHED) {
       throw new BadRequestException('Cannot reserve for an unpublished or canceled event');
     }
