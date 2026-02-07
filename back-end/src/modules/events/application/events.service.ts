@@ -39,12 +39,18 @@ export class EventsService {
     return this.eventModel.find().exec();
   }
 
-  async findOne(id: string): Promise<EventDocument> {
-    const event = await this.eventModel.findById(id).exec();
+  async findOne(id: string): Promise<any> {
+    const event = await this.eventModel.findById(id).lean().exec();
     if (!event) {
       throw new NotFoundException(`Event with ID ${id} not found`);
     }
-    return event;
+
+    const reservations = await this.reservationModel.countDocuments({
+      eventId: id,
+      status: { $nin: [ReservationStatus.CANCELED, ReservationStatus.REFUSED] },
+    });
+
+    return { ...event, reservedCount: reservations };
   }
 
   async update(id: string, updateEventDto: UpdateEventDto): Promise<EventDocument> {
