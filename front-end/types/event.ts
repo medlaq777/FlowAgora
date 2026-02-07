@@ -5,10 +5,10 @@ export enum EventStatus {
 }
 
 export interface Event {
-  _id: string; // MongoDB ID is usually _id
+  _id: string;
   title: string;
   description: string;
-  date: string; // Date comes as string from JSON
+  date: string;
   location: string;
   capacity: number;
   status: EventStatus;
