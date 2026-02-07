@@ -21,8 +21,18 @@ export class EventsService {
     return createdEvent.save();
   }
 
-  async findAllPublished(): Promise<EventDocument[]> {
-    return this.eventModel.find({ status: EventStatus.PUBLISHED }).exec();
+  async findAllPublished(): Promise<any[]> {
+    const events = await this.eventModel.find({ status: EventStatus.PUBLISHED }).lean().exec();
+    
+    return Promise.all(
+      events.map(async (event) => {
+        const reservations = await this.reservationModel.countDocuments({
+          eventId: event._id.toString(),
+          status: { $nin: [ReservationStatus.CANCELED, ReservationStatus.REFUSED] },
+        });
+        return { ...event, reservedCount: reservations };
+      })
+    );
   }
 
   async findAll(): Promise<EventDocument[]> {
