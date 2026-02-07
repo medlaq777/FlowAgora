@@ -4,11 +4,10 @@ import { format } from 'date-fns';
 
 async function getEvents(): Promise<Event[]> {
   const res = await fetch('http://localhost:3000/events', { 
-    cache: 'no-store' // Ensure SSR always fetches fresh data
+    cache: 'no-store'
   });
   
   if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch events');
   }
  
