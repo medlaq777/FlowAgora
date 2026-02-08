@@ -19,7 +19,6 @@ describe('Participant Flow (e2e)', () => {
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
 
-    // 1. Setup Admin & Create Event
     const adminEmail = `admin_part_${Date.now()}@example.com`;
     await request(app.getHttpServer()).post('/users').send({
       email: adminEmail, password: 'password123', firstName: 'Admin', lastName: 'User', role: 'ADMIN',
@@ -41,14 +40,12 @@ describe('Participant Flow (e2e)', () => {
       });
     eventId = eventRes.body._id;
 
-    // Publish the event
     await request(app.getHttpServer())
       .patch(`/events/${eventId}/status`)
       .set('Authorization', `Bearer ${adminToken}`)
       .send({ status: 'PUBLISHED' })
       .expect(200);
 
-    // 2. Register & Login Participant
     const userEmail = `user_part_${Date.now()}@example.com`;
     await request(app.getHttpServer()).post('/users').send({
       email: userEmail, password: 'password123', firstName: 'Part', lastName: 'User', role: 'PARTICIPANT',

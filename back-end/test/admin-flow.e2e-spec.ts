@@ -14,10 +14,9 @@ describe('Admin Flow (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe()); // Enable validation
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
 
-    // 1. Register Admin User
     const uniqueEmail = `admin_${Date.now()}@example.com`;
     await request(app.getHttpServer())
       .post('/users')
@@ -29,7 +28,6 @@ describe('Admin Flow (e2e)', () => {
         role: 'ADMIN',
       });
 
-    // 2. Login as Admin
     const loginResponse = await request(app.getHttpServer())
       .post('/auth/login')
       .send({
@@ -49,7 +47,7 @@ describe('Admin Flow (e2e)', () => {
     const createEventDto = {
       title: 'Admin Created Event',
       description: 'An event created by admin',
-      date: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
+      date: new Date(Date.now() + 86400000).toISOString(),
       location: 'Virtual',
       capacity: 50,
     };

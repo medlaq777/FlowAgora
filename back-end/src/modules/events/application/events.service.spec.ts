@@ -11,7 +11,6 @@ describe('EventsService', () => {
   let reservationModel: any;
 
   beforeEach(async () => {
-    // Mock Model Constructor
     eventModel = jest.fn();
     eventModel.find = jest.fn();
     eventModel.findById = jest.fn();
@@ -30,7 +29,7 @@ describe('EventsService', () => {
           useValue: eventModel,
         },
         {
-          provide: getModelToken(ReservationModel.name), // Correct token
+          provide: getModelToken(ReservationModel.name),
           useValue: reservationModel,
         },
       ],
@@ -55,12 +54,10 @@ describe('EventsService', () => {
       
       const savedEvent = { ...createEventDto, _id: 'newId', status: EventStatus.PUBLISHED };
       
-      // Mock the constructor to return an object with a save method
       const mockEventInstance = {
         save: jest.fn().mockResolvedValue(savedEvent),
       };
       
-      // Inject the mock instance when the model is instantiated
       (eventModel as unknown as jest.Mock).mockImplementation(() => mockEventInstance);
 
       const result = await service.create(createEventDto);

@@ -47,19 +47,13 @@ describe('ReservationsService', () => {
     it('should create a reservation if capacity allows', async () => {
         const createReservationDto = { eventId: 'eventId' };
         const userId = 'userId';
-        
-        // Mock event existence
         const mockEvent = { _id: 'eventId', capacity: 100, status: 'PUBLISHED' };
         eventModel.findById.mockReturnValue({
              exec: jest.fn().mockResolvedValue(mockEvent),
         });
-
-        // Mock existing reservation check
         reservationModel.findOne.mockReturnValue({
              exec: jest.fn().mockResolvedValue(null),
         });
-
-        // Mock reservation count
         reservationModel.countDocuments.mockReturnValue({
              exec: jest.fn().mockResolvedValue(50),
         });
@@ -89,15 +83,12 @@ describe('ReservationsService', () => {
         eventModel.findById.mockReturnValue({
              exec: jest.fn().mockResolvedValue(mockEvent),
         });
-
         reservationModel.findOne.mockReturnValue({
              exec: jest.fn().mockResolvedValue(null),
         });
-
         reservationModel.countDocuments.mockReturnValue({
              exec: jest.fn().mockResolvedValue(100),
         });
-
         await expect(service.create(createReservationDto, userId)).rejects.toThrow(ConflictException);
     });
   });
