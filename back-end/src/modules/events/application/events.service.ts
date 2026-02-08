@@ -54,6 +54,20 @@ export class EventsService {
     return { ...event, _id: event._id.toString(), reservedCount: reservations } as EventResponseDto;
   }
 
+  async findOnePublic(id: string): Promise<EventResponseDto> {
+    const event = await this.eventModel.findOne({ _id: id, status: EventStatus.PUBLISHED }).lean().exec();
+    if (!event) {
+      throw new NotFoundException(`Event with ID ${id} not found or not published`);
+    }
+
+    const reservations = await this.reservationModel.countDocuments({
+      eventId: id,
+      status: { $nin: [ReservationStatus.CANCELED, ReservationStatus.REFUSED] },
+    });
+
+    return { ...event, _id: event._id.toString(), reservedCount: reservations } as EventResponseDto;
+  }
+
   async update(id: string, updateEventDto: UpdateEventDto): Promise<EventDocument> {
     const existingEvent = await this.eventModel
       .findByIdAndUpdate(id, updateEventDto, { new: true })

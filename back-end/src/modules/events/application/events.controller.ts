@@ -7,6 +7,7 @@ import {
   Param,
   Put,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { EventsService } from './events.service';
@@ -16,6 +17,11 @@ import { EventStatus } from '../domain/entities/event.entity';
 import { JwtAuthGuard } from '../../auth/infrastructure/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/infrastructure/guards/roles.guard';
 import { Roles } from '../../auth/infrastructure/decorators/roles.decorator';
+import { OptionalJwtAuthGuard } from '../../auth/infrastructure/guards/optional-jwt-auth.guard';
+import { Request } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core'; // Actually standard @Req or @Request decorator is better
+
 
 @ApiTags('Events')
 @Controller('events')
@@ -51,11 +57,9 @@ export class EventsController {
     return this.eventsService.findAll();
   }
 
-  @ApiBearerAuth()
-  @Get('admin/upcoming')
-  @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Get upcoming events (Admin)' })
-  @ApiResponse({ status: 200, description: 'Return upcoming events.' })
+  @Get('upcoming')
+  @ApiOperation({ summary: 'Get upcoming published events' })
+  @ApiResponse({ status: 200, description: 'Return upcoming published events.' })
   findUpcoming() {
     return this.eventsService.findUpcoming();
   }
@@ -72,11 +76,20 @@ export class EventsController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get event by ID' })
+  @ApiOperation({ summary: 'Get published event by ID' })
   @ApiResponse({ status: 200, description: 'Return the event.' })
   @ApiResponse({ status: 404, description: 'Event not found.' })
-  findOne(@Param('id') id: string) {
-    return this.eventsService.findOne(id);
+  @Get(':id')
+  @UseGuards(OptionalJwtAuthGuard)
+  @ApiOperation({ summary: 'Get event by ID (Public: Published only, Admin: All)' })
+  @ApiResponse({ status: 200, description: 'Return the event.' })
+  @ApiResponse({ status: 404, description: 'Event not found.' })
+  findOne(@Param('id') id: string, @Req() req: any) {
+    const user = req.user;
+    if (user && user.role === 'ADMIN') {
+      return this.eventsService.findOne(id);
+    }
+    return this.eventsService.findOnePublic(id);
   }
 
   @ApiBearerAuth()
