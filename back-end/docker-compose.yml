@@ -1,5 +1,6 @@
 services:
   backend:
+    container_name: flowagora-backend
     build: .
     ports:
       - "3000:3000"
@@ -10,15 +11,18 @@ services:
       - mongo
     networks:
       - flowagora-network
+    restart: unless-stopped
   
   mongo:
-    image: mongo:latest
+    container_name: flowagora-mongo
+    image: mongo:7.0
     ports:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
     networks:
       - flowagora-network
+    restart: unless-stopped
 
 networks:
   flowagora-network:
