@@ -1,94 +1,60 @@
 import Image from "next/image";
-import ClientExample from "@/components/ClientExample";
+import Link from 'next/link';
+import { format } from 'date-fns';
 
-export default function Home() {
+interface Event {
+  _id: string;
+  title: string;
+  date: string;
+  location: string;
+}
+
+async function getUpcomingEvents(): Promise<Event[]> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/upcoming`, { cache: 'no-store' });
+  if (!res.ok) return [];
+  return res.json();
+}
+
+export default async function Home() {
+  const upcomingEvents = await getUpcomingEvents();
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-(family-name:--font-geist-sans)">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <h1 className="text-4xl font-bold">Welcome to FlowAgora</h1>
-        <ClientExample />
-        
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/8 dark:border-white/145 transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen p-8 pb-20 font-[--font-geist-sans]">
+      <main className="max-w-4xl mx-auto flex flex-col gap-8">
+        <div className="flex flex-col items-center sm:items-start gap-4">
+          <h1 className="text-4xl font-bold">Welcome to FlowAgora</h1>
+          <p className="text-lg text-gray-600 dark:text-gray-300">Discover and book amazing events.</p>
+          <div className="flex gap-4">
+             <Link href="/events" className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition">
+                Browse All Events
+             </Link>
+             {!upcomingEvents.length && (
+                <Link href="/login" className="border border-gray-300 px-6 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                  Sign In
+                </Link>
+             )}
+          </div>
         </div>
+
+        <section>
+          <h2 className="text-2xl font-semibold mb-6">Upcoming Events</h2>
+          {upcomingEvents.length === 0 ? (
+            <p className="text-gray-500">No upcoming events found.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {upcomingEvents.map(event => (
+                <Link key={event._id} href={`/events/${event._id}`} className="block group">
+                  <div className="border rounded-lg p-6 hover:shadow-lg transition bg-white dark:bg-gray-800 dark:border-gray-700">
+                    <h3 className="text-xl font-bold mb-2 group-hover:text-blue-600 transition">{event.title}</h3>
+                    <p className="text-gray-500 text-sm mb-1">{format(new Date(event.date), 'PPP p')}</p>
+                    <p className="text-gray-500 text-sm">{event.location}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }

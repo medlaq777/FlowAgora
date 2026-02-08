@@ -4,6 +4,7 @@ import { useEffect, useState, use } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { Event, EventStatus } from '@/types/event';
+import { api } from '@/services/api';
 
 export default function EditEventPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -15,8 +16,7 @@ export default function EditEventPage({ params }: { params: Promise<{ id: string
 
   useEffect(() => {
     if (token && id) {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${id}`)
-        .then(res => res.json())
+      api.get<Event>(`/events/${id}`)
         .then(data => {
             const date = new Date(data.date);
             const formattedDate = date.toISOString().slice(0, 16);
@@ -35,31 +35,16 @@ export default function EditEventPage({ params }: { params: Promise<{ id: string
     setSaving(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            title: formData.title,
-            description: formData.description,
-            date: formData.date,
-            location: formData.location,
-            capacity: formData.capacity,
-        }),
+      await api.put(`/events/${id}`, {
+          title: formData.title,
+          description: formData.description,
+          date: formData.date,
+          location: formData.location,
+          capacity: formData.capacity,
       });
 
-      if (!res.ok) throw new Error('Failed to update event');
       if (formData.status) {
-          await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${id}/status`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ status: formData.status })
-          });
+          await api.patch(`/events/${id}/status`, { status: formData.status });
       }
 
       router.push('/admin/events');

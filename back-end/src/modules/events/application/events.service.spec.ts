@@ -57,17 +57,12 @@ describe('EventsService', () => {
       };
 
       const savedEvent = { ...createEventDto, _id: 'newId', status: EventStatus.PUBLISHED };
-
-      // Mock the constructor behavior
       const mockEventInstance = {
         save: jest.fn().mockResolvedValue(savedEvent),
       };
       
-      // We need to mock the generic Model constructor
       const mockModel = jest.fn().mockImplementation(() => mockEventInstance) as any;
-      mockModel.find = eventModel.find; // Re-attach other mocked methods if needed
-      
-      // Re-create the testing module because we need to override the provider value for the class constructor mock
+      mockModel.find = eventModel.find; 
       const module: TestingModule = await Test.createTestingModule({
         providers: [
           EventsService,

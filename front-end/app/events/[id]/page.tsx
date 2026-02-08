@@ -2,6 +2,7 @@ import { Event, EventStatus } from "@/types/event";
 import { format } from 'date-fns';
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import ReserveButton from "@/components/ReserveButton";
 
 async function getEvent(id: string): Promise<Event> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${id}`, { 
@@ -68,16 +69,17 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
             <div className="flex justify-end items-center gap-4">
                {isFull && <span className="text-red-500 font-medium">Event is Full</span>}
                
-               <button
-                disabled={!canReserve}
-                className={`py-3 px-8 rounded-md font-medium text-white transition-colors
-                  ${canReserve 
-                    ? 'bg-blue-600 hover:bg-blue-700 shadow-md transform hover:-translate-y-0.5' 
-                    : 'bg-gray-400 cursor-not-allowed'}
-                `}
-              >
-                {isFull ? 'Sold Out' : 'Reserve a Spot'}
-              </button>
+
+
+// ... (inside component)
+
+               {isFull && <span className="text-red-500 font-medium">Event is Full</span>}
+               
+               <ReserveButton 
+                 eventId={event._id} 
+                 isFull={isFull} 
+                 canReserve={canReserve} 
+               />
             </div>
           </div>
         </div>

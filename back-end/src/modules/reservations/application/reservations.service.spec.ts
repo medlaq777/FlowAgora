@@ -72,8 +72,6 @@ describe('ReservationsService', () => {
         const mockReservationInstance = {
             save: jest.fn().mockResolvedValue(savedReservation),
         };
-        
-        // Mocking the constructor
         const mockModel = jest.fn().mockImplementation(() => mockReservationInstance) as any;
         Object.assign(mockModel, reservationModel);
 

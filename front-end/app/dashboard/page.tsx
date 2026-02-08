@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { format } from 'date-fns';
 import TicketDownload from '@/components/TicketDownload';
 import ParticipantReservationAction from '@/components/ParticipantReservationAction';
+import { api } from '@/services/api';
 
 interface Reservation {
     _id: string;
@@ -26,21 +27,15 @@ export default function DashboardPage() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loadingConfig, setLoadingConfig] = useState(true);
 
-  const fetchReservations = () => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservations/my-reservations`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
-    .then(res => res.json())
-    .then(data => {
+  const fetchReservations = async () => {
+    try {
+      const data = await api.get<Reservation[]>('/reservations/my-reservations');
       setReservations(data);
-      setLoadingConfig(false);
-    })
-    .catch(err => {
+    } catch (err) {
       console.error(err);
+    } finally {
       setLoadingConfig(false);
-    });
+    }
   };
 
   useEffect(() => {
