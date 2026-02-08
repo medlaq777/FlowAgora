@@ -21,7 +21,7 @@ export default function EventReservationsPage({ params }: { params: Promise<{ id
   const [loading, setLoading] = useState(true);
 
   const fetchReservations = () => {
-      fetch(`http://localhost:3000/reservations/by-event/${id}`, {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservations/by-event/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

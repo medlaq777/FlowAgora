@@ -3,7 +3,7 @@ import Link from "next/link";
 import { format } from 'date-fns';
 
 async function getEvents(): Promise<Event[]> {
-  const res = await fetch('http://localhost:3000/events', { 
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events`, { 
     cache: 'no-store'
   });
   

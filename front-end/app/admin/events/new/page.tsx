@@ -21,7 +21,7 @@ export default function NewEventPage() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:3000/events', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

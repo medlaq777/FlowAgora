@@ -13,7 +13,7 @@ export default function AdminEventsPage() {
 
   useEffect(() => {
     if (token) {
-      fetch('http://localhost:3000/events/admin', {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/admin`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

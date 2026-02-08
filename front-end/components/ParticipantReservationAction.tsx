@@ -17,7 +17,7 @@ export default function ParticipantReservationAction({ id, onUpdate }: Participa
         
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:3000/reservations/${id}/cancel`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservations/${id}/cancel`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${token}`

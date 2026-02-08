@@ -16,7 +16,7 @@ export default function ReservationAction({ id, status, onUpdate }: ReservationA
     const updateStatus = async (newStatus: string) => {
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:3000/reservations/${id}/status`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservations/${id}/status`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

@@ -10,7 +10,7 @@ export default function TicketDownload({ id }: { id: string }) {
     const downloadTicket = async () => {
         setDownloading(true);
         try {
-            const res = await fetch(`http://localhost:3000/reservations/${id}/ticket`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservations/${id}/ticket`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

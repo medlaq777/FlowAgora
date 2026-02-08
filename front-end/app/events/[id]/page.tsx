@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 async function getEvent(id: string): Promise<Event> {
-  const res = await fetch(`http://localhost:3000/events/${id}`, { 
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${id}`, { 
     cache: 'no-store' 
   });
   

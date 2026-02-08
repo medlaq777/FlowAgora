@@ -27,7 +27,7 @@ export default function DashboardPage() {
   const [loadingConfig, setLoadingConfig] = useState(true);
 
   const fetchReservations = () => {
-    fetch('http://localhost:3000/reservations/my-reservations', {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservations/my-reservations`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

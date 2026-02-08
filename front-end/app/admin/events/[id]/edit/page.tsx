@@ -15,7 +15,7 @@ export default function EditEventPage({ params }: { params: Promise<{ id: string
 
   useEffect(() => {
     if (token && id) {
-      fetch(`http://localhost:3000/events/${id}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${id}`)
         .then(res => res.json())
         .then(data => {
             const date = new Date(data.date);
@@ -35,7 +35,7 @@ export default function EditEventPage({ params }: { params: Promise<{ id: string
     setSaving(true);
 
     try {
-      const res = await fetch(`http://localhost:3000/events/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ export default function EditEventPage({ params }: { params: Promise<{ id: string
 
       if (!res.ok) throw new Error('Failed to update event');
       if (formData.status) {
-          await fetch(`http://localhost:3000/events/${id}/status`, {
+          await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${id}/status`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
