@@ -18,7 +18,6 @@ export default function EditEventPage({ params }: { params: Promise<{ id: string
       fetch(`http://localhost:3000/events/${id}`)
         .then(res => res.json())
         .then(data => {
-            // Format date for input datetime-local (YYYY-MM-DDTHH:mm)
             const date = new Date(data.date);
             const formattedDate = date.toISOString().slice(0, 16);
             setFormData({ ...data, date: formattedDate });
@@ -45,20 +44,13 @@ export default function EditEventPage({ params }: { params: Promise<{ id: string
         body: JSON.stringify({
             title: formData.title,
             description: formData.description,
-            date: formData.date, // Backend should handle ISO string
+            date: formData.date,
             location: formData.location,
             capacity: formData.capacity,
         }),
       });
 
       if (!res.ok) throw new Error('Failed to update event');
-      
-      // Also update status if changed (PUT might not handle status based on DTO)
-      // Check if status changed and call PATCH if needed
-      // For simplicity, let's assume PUT handles it or we do it separately.
-      // Actually, my backend controller has separate PATCH for status. 
-      // Let's add status dropdown and handle it.
-      
       if (formData.status) {
           await fetch(`http://localhost:3000/events/${id}/status`, {
             method: 'PATCH',

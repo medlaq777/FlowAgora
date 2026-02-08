@@ -4,7 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 
 interface ReservationActionProps {
-  id: string; // Reservation ID
+  id: string;
   status: string;
   onUpdate: () => void;
 }

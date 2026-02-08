@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 interface User {
   email: string;
   role: string;
-  sub: string; // userId from JWT
+  sub: string;
 }
 
 interface AuthContextType {
@@ -26,13 +26,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Initialize from localStorage
     const storedToken = localStorage.getItem('token');
     if (storedToken) {
       setToken(storedToken);
-      // In a real app, we'd verify the token or decode it here.
-      // For now, we'll assume it's valid if present and maybe decode payload if needed
-      // Simple decode for demo purposes (BE CAREFUL IN PRODUCTION)
       try {
         const payload = JSON.parse(atob(storedToken.split('.')[1]));
         setUser({ email: payload.email, role: payload.role, sub: payload.sub });
@@ -51,7 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const payload = JSON.parse(atob(newToken.split('.')[1]));
       setUser({ email: payload.email, role: payload.role, sub: payload.sub });
-      router.push('/'); // Redirect to home or protected route
+      router.push('/');
     } catch (e) {
       console.error('Login failed: invalid token', e);
     }

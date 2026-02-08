@@ -30,14 +30,9 @@ export default function LoginPage() {
         throw new Error(data.message || 'Login failed');
       }
 
-      // Assuming the API returns { access_token: string } or similar
-      // Adjust based on actual backend response which likely returns just the token or an object
-      // Let's assume it returns { access_token: "..." } based on standard NestJS JWT pattern
       if (data.access_token) {
         login(data.access_token);
       } else {
-         // Fallback if it returns just the string or different key, usually it is an object
-         // I'll assume object for now.
          throw new Error('Invalid response from server');
       }
 

@@ -28,7 +28,6 @@ export class ReservationsController {
   @UseGuards(JwtAuthGuard)
   @Patch(':id/cancel')
   async cancel(@Param('id') id: string, @Request() req) {
-    // In a real app, verify ownership here or in service
     return this.reservationsService.updateStatus(id, ReservationStatus.CANCELED); 
   }
 

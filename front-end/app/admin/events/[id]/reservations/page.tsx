@@ -8,9 +8,9 @@ import { format } from 'date-fns';
 
 interface Reservation {
     _id: string;
-    userId: string; // Or populated user object depending on backend
+    userId: string; 
     eventId: string;
-    status: string; // PENDING, CONFIRMED, CANCELED, REFUSED
+    status: string;
     createdAt: string;
 }
 

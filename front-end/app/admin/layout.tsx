@@ -16,7 +16,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       if (!user) {
         router.push('/login');
       } else if (user.role !== 'ADMIN') {
-        router.push('/'); // Redirect non-admins to home
+        router.push('/');
       } else {
         setIsAuthorized(true);
       }
@@ -34,7 +34,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const navItems = [
     { name: 'Dashboard', href: '/admin' },
     { name: 'Events', href: '/admin/events' },
-    // { name: 'Reservations', href: '/admin/reservations' }, // Future
   ];
 
   return (
