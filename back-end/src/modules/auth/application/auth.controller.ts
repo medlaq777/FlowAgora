@@ -8,9 +8,11 @@ import {
   Inject,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import type { IAuthService } from '../domain/interfaces/auth.service.interface';
 import { LoginDto } from './dto/login.dto';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -18,6 +20,9 @@ export class AuthController {
   ) {}
 
   @Post('login')
+  @ApiOperation({ summary: 'User login' })
+  @ApiResponse({ status: 200, description: 'Successful login' })
+  @ApiResponse({ status: 401, description: 'Invalid credentials' })
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginDto) {
     const user = await this.authService.validateUser(
