@@ -13,6 +13,24 @@
 
 The application is structured into domain-driven modules that handle specific business flows:
 
+### 📂 Project Structure
+
+```bash
+src/
+├── common/
+│   ├── decorators/
+│   ├── filters/
+│   └── guards/
+├── database/
+├── modules/
+│   ├── auth/
+│   ├── events/
+│   ├── reservations/
+│   └── users/
+├── app.module.ts
+└── main.ts
+```
+
 #### 1. Auth & Users (Identity Management)
 
 - **Registration**: New users can register as `PARTICIPANT` or `ADMIN`.
