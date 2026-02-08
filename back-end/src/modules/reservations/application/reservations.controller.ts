@@ -1,5 +1,5 @@
 import { Controller, Post, Body, UseGuards, Request, Patch, Param, Get, Res } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiProduces } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
@@ -47,7 +47,8 @@ export class ReservationsController {
   @UseGuards(JwtAuthGuard)
   @Get(':id/ticket')
   @ApiOperation({ summary: 'Generate reservation ticket' })
-  @ApiResponse({ status: 200, description: 'Ticket generated successfully.' })
+  @ApiResponse({ status: 200, description: 'Ticket generated successfully.', content: { 'application/pdf': { schema: { type: 'string', format: 'binary' } } } })
+  @ApiProduces('application/pdf')
   async generateTicket(@Param('id') id: string, @Request() req, @Res() res: Response) {
     const buffer = await this.reservationsService.generateTicket(id, req.user.userId);
     
