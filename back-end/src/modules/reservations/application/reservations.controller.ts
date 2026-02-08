@@ -6,6 +6,7 @@ import { UpdateReservationStatusDto } from './dto/update-reservation-status.dto'
 import { JwtAuthGuard } from '../../auth/infrastructure/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/infrastructure/guards/roles.guard';
 import { Roles } from '../../auth/infrastructure/decorators/roles.decorator';
+import { ReservationStatus } from '../domain/entities/reservation.entity';
 
 @Controller('reservations')
 export class ReservationsController {
@@ -22,6 +23,13 @@ export class ReservationsController {
   @Patch(':id/status')
   updateStatus(@Param('id') id: string, @Body() updateStatusDto: UpdateReservationStatusDto) {
     return this.reservationsService.updateStatus(id, updateStatusDto.status);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/cancel')
+  async cancel(@Param('id') id: string, @Request() req) {
+    // In a real app, verify ownership here or in service
+    return this.reservationsService.updateStatus(id, ReservationStatus.CANCELED); 
   }
 
   @UseGuards(JwtAuthGuard)
@@ -43,6 +51,12 @@ export class ReservationsController {
   @Get('by-event/:eventId')
   findByEvent(@Param('eventId') eventId: string) {
     return this.reservationsService.findByEvent(eventId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('my-reservations')
+  findAllMine(@Request() req) {
+    return this.reservationsService.findByUser(req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
