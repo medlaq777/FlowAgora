@@ -28,7 +28,7 @@ export class ReservationsController {
   @UseGuards(JwtAuthGuard)
   @Patch(':id/cancel')
   async cancel(@Param('id') id: string, @Request() req) {
-    return this.reservationsService.updateStatus(id, ReservationStatus.CANCELED); 
+    return this.reservationsService.cancelByUser(id, req.user.userId); 
   }
 
   @UseGuards(JwtAuthGuard)

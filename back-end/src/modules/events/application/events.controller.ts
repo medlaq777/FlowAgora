@@ -40,8 +40,7 @@ export class EventsController {
   }
 
   @Get('admin/upcoming')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard)
   findUpcoming() {
     return this.eventsService.findUpcoming();
   }

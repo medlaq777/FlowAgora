@@ -5,6 +5,7 @@ import { EventModel, EventDocument } from '../infrastructure/persistence/event.s
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { EventStatus } from '../domain/entities/event.entity';
+import { EventResponseDto } from './dto/event-response.dto';
 
 import { ReservationModel, ReservationDocument } from '../../reservations/infrastructure/persistence/reservation.schema';
 import { ReservationStatus } from '../../reservations/domain/entities/reservation.entity';
@@ -21,7 +22,7 @@ export class EventsService {
     return createdEvent.save();
   }
 
-  async findAllPublished(): Promise<any[]> {
+  async findAllPublished(): Promise<EventResponseDto[]> {
     const events = await this.eventModel.find({ status: EventStatus.PUBLISHED }).lean().exec();
     
     return Promise.all(
@@ -30,7 +31,7 @@ export class EventsService {
           eventId: event._id.toString(),
           status: { $nin: [ReservationStatus.CANCELED, ReservationStatus.REFUSED] },
         });
-        return { ...event, reservedCount: reservations };
+        return { ...event, _id: event._id.toString(), reservedCount: reservations } as EventResponseDto;
       })
     );
   }
@@ -39,7 +40,7 @@ export class EventsService {
     return this.eventModel.find().exec();
   }
 
-  async findOne(id: string): Promise<any> {
+  async findOne(id: string): Promise<EventResponseDto> {
     const event = await this.eventModel.findById(id).lean().exec();
     if (!event) {
       throw new NotFoundException(`Event with ID ${id} not found`);
@@ -50,7 +51,7 @@ export class EventsService {
       status: { $nin: [ReservationStatus.CANCELED, ReservationStatus.REFUSED] },
     });
 
-    return { ...event, reservedCount: reservations };
+    return { ...event, _id: event._id.toString(), reservedCount: reservations } as EventResponseDto;
   }
 
   async update(id: string, updateEventDto: UpdateEventDto): Promise<EventDocument> {
@@ -82,19 +83,31 @@ export class EventsService {
     }).exec();
   }
 
-  async getStats(id: string): Promise<{ capacity: number, reservations: number, fillRate: number }> {
+  async getStats(id: string): Promise<{ capacity: number, reservations: number, fillRate: number, breakdown: any }> {
      const event = await this.findOne(id);
-     const reservations = await this.reservationModel.countDocuments({
+     
+     const totalReservations = await this.reservationModel.countDocuments({
          eventId: id,
          status: { $nin: [ReservationStatus.CANCELED, ReservationStatus.REFUSED] }
      }).exec();
 
-     const fillRate = event.capacity > 0 ? (reservations / event.capacity) * 100 : 0;
+     const pending = await this.reservationModel.countDocuments({ eventId: id, status: ReservationStatus.PENDING }).exec();
+     const confirmed = await this.reservationModel.countDocuments({ eventId: id, status: ReservationStatus.CONFIRMED }).exec();
+     const canceled = await this.reservationModel.countDocuments({ eventId: id, status: ReservationStatus.CANCELED }).exec();
+     const refused = await this.reservationModel.countDocuments({ eventId: id, status: ReservationStatus.REFUSED }).exec();
+
+     const fillRate = event.capacity > 0 ? (totalReservations / event.capacity) * 100 : 0;
 
      return {
          capacity: event.capacity,
-         reservations,
+         reservations: totalReservations,
          fillRate: parseFloat(fillRate.toFixed(2)),
+         breakdown: {
+             PENDING: pending,
+             CONFIRMED: confirmed,
+             CANCELED: canceled,
+             REFUSED: refused
+         }
      };
   }
 }

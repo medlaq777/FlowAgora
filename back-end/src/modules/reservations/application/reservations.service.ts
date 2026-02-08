@@ -67,6 +67,25 @@ export class ReservationsService {
     return reservation;
   }
 
+  async cancelByUser(id: string, userId: string): Promise<ReservationDocument> {
+    const reservation = await this.reservationModel.findById(id).exec();
+    
+    if (!reservation) {
+      throw new NotFoundException(`Reservation with ID ${id} not found`);
+    }
+
+    if (reservation.userId !== userId) {
+      throw new ForbiddenException('You can only cancel your own reservations');
+    }
+
+    if (reservation.status === ReservationStatus.CANCELED || reservation.status === ReservationStatus.REFUSED) {
+        throw new BadRequestException('Reservation is already canceled or refused');
+    }
+
+    reservation.status = ReservationStatus.CANCELED;
+    return reservation.save();
+  }
+
   async generateTicket(reservationId: string, userId: string): Promise<Buffer> {
     const reservation = await this.reservationModel.findById(reservationId).exec();
     if (!reservation) {

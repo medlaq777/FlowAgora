@@ -27,6 +27,11 @@ export class UserRepositoryImpl implements IUserRepository {
     return this.toEntity(savedUser);
   }
 
+  async findAll(): Promise<User[]> {
+    const users = await this.userModel.find().exec();
+    return users.map((user) => this.toEntity(user));
+  }
+
   private toEntity(userDocument: UserDocument): User {
     return new User(
       userDocument._id.toString(),
