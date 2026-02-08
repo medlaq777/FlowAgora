@@ -45,14 +45,15 @@ Events go through a defined lifecycle managed by Admins:
 - **Draft**: Initial creation state.
 - **Published**: Visible to participants for booking.
 - **Completed/Cancelled**: Terminal states.
-- **Stats**: Admins can track capacity, reservation counts, and fill rates.
+- **Stats Dashboard**: Admins have access to detailed metrics including total reservations, capacity utilization, and fill rates.
 
 #### 3. Reservations & Ticketing
 
-- **Booking Flow**: Participants can reserve spots in `PUBLISHED` events.
-- **Validation**: Checks for event capacity and availability ensuring no overbooking.
-- **PDF Tickets**: Upon successful reservation, a unique PDF ticket is generated containing event details and user information.
-- **Cancellation**: Participants can cancel their reservations, freeing up spots for others.
+- **Smart Booking**: Participants can reserve spots in `PUBLISHED` events, with real-time capacity checks.
+- **Reservation Workflow**: Reservations start as `PENDING` and must be `CONFIRMED` by an Admin.
+- **Capacity Management**: Automatic handling of sold-out events and waitlists (future feature).
+- **PDF Tickets**: Upon confirmation, a unique PDF ticket is generated containing event details, user info, and reservation ID.
+- **User Control**: Participants can view their history and cancel upcoming reservations if needed.
 
 ---
 
@@ -174,24 +175,24 @@ npm run test
 
 ### 2. End-to-End (E2E) Tests
 
-E2E tests simulate real user scenarios against a running application instance (using a test database/module).
+E2E tests simulate real user scenarios against a running application instance, verifying the entire flow from registration to ticket generation.
 
 ```bash
 npm run test:e2e
 ```
 
-**What is tested?**
+**Scenario Tested (`app.e2e-spec.ts`):**
 
-- **Admin Flow (`admin-flow.e2e-spec.ts`)**:
-  - Admin registration & login.
-  - Creating and updating events.
-  - Viewing event statistics.
-- **Participant Flow (`participant-flow.e2e-spec.ts`)**:
-  - Participant registration & login.
-  - Browsing available events.
-  - Making a reservation.
-  - Viewing personal reservation history.
-  - Cancelling a reservation.
+- **Full User Journey**:
+  1.  **Register** a new Participant and Admin.
+  2.  **Login** to obtain secure JWT tokens.
+  3.  **Create Event** (Admin) with capacity limits.
+  4.  **Publish Event** (Admin) to make it visible.
+  5.  **View Public Events** (Participant).
+  6.  **Reserve Ticket** (Participant).
+  7.  **View My Reservations** (Participant).
+  8.  **Confirm Reservation** (Admin).
+  9.  **Download PDF Ticket** (Participant).
 
 ### 3. Test Coverage
 

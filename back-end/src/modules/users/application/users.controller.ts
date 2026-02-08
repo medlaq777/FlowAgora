@@ -9,8 +9,8 @@ import {
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../../auth/infrastructure/guards/jwt-auth.guard';
-import { RolesGuard } from '../../../common/guards/roles.guard';
-import { Roles } from '../../../common/decorators/roles.decorator';
+import { RolesGuard } from '../../auth/infrastructure/guards/roles.guard';
+import { Roles } from '../../auth/infrastructure/decorators/roles.decorator';
 
 import { CreateUserDto } from './dto/create-user.dto';
 

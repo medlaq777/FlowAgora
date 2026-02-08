@@ -7,7 +7,6 @@ import {
   Param,
   Put,
   UseGuards,
-  Req,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { EventsService } from './events.service';
@@ -17,10 +16,6 @@ import { EventStatus } from '../domain/entities/event.entity';
 import { JwtAuthGuard } from '../../auth/infrastructure/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/infrastructure/guards/roles.guard';
 import { Roles } from '../../auth/infrastructure/decorators/roles.decorator';
-import { OptionalJwtAuthGuard } from '../../auth/infrastructure/guards/optional-jwt-auth.guard';
-import { Request } from '@nestjs/common';
-import { Inject } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core'; // Actually standard @Req or @Request decorator is better
 
 
 @ApiTags('Events')
@@ -79,16 +74,7 @@ export class EventsController {
   @ApiOperation({ summary: 'Get published event by ID' })
   @ApiResponse({ status: 200, description: 'Return the event.' })
   @ApiResponse({ status: 404, description: 'Event not found.' })
-  @Get(':id')
-  @UseGuards(OptionalJwtAuthGuard)
-  @ApiOperation({ summary: 'Get event by ID (Public: Published only, Admin: All)' })
-  @ApiResponse({ status: 200, description: 'Return the event.' })
-  @ApiResponse({ status: 404, description: 'Event not found.' })
-  findOne(@Param('id') id: string, @Req() req: any) {
-    const user = req.user;
-    if (user && user.role === 'ADMIN') {
-      return this.eventsService.findOne(id);
-    }
+  findOne(@Param('id') id: string) {
     return this.eventsService.findOnePublic(id);
   }
 
