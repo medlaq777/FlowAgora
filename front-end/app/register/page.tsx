@@ -18,11 +18,18 @@ export default function RegisterPage() {
         lastName: '',
         email: '',
         password: '',
+        secretCode: '',
     });
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (selectedRole === 'ADMIN' && form.secretCode !== ADMIN_SECRET) {
+            toast.error('Invalid Organizer Secret Code');
+            return;
+        }
+
         setLoading(true);
 
         try {
@@ -42,6 +49,9 @@ export default function RegisterPage() {
             setLoading(false);
         }
     };
+
+    const ADMIN_SECRET = 'admin123'; // In a real app, this should be an env var or validated by backend
+
 
     return (
         <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-6 py-12">
@@ -231,6 +241,27 @@ export default function RegisterPage() {
                                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                             />
                         </div>
+
+                        {selectedRole === 'ADMIN' && (
+                            <div className="animate-fade-in">
+                                <label htmlFor="secret-code" className="apple-label">
+                                    Organizer Secret Code
+                                </label>
+                                <input
+                                    id="secret-code"
+                                    name="secretCode"
+                                    type="password"
+                                    required
+                                    className="apple-input"
+                                    placeholder="Enter the secret code"
+                                    value={(form as any).secretCode}
+                                    onChange={(e) => setForm({ ...form, secretCode: e.target.value } as any)}
+                                />
+                                <p className="text-[11px] text-apple-gray-300 mt-1">
+                                    Required for creating an Organizer account.
+                                </p>
+                            </div>
+                        )}
 
                         <div className="pt-2 space-y-4">
                             <button

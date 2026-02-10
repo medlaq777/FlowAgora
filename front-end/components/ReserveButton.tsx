@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { reservationsService } from '@/services/reservations.service';
@@ -17,6 +17,27 @@ export default function ReserveButton({ eventId, isFull, canReserve }: Props) {
     const router = useRouter();
     const toast = useToast();
     const [loading, setLoading] = useState(false);
+    const [hasReserved, setHasReserved] = useState(false);
+
+    // Check if user already reserved this event
+    useEffect(() => {
+        const checkReservation = async () => {
+            if (isAuthenticated) {
+                try {
+                    const myReservations = await reservationsService.findAllMine();
+                    const found = myReservations.some(r =>
+                        (typeof r.eventId === 'string' ? r.eventId : r.eventId._id) === eventId &&
+                        r.status !== 'CANCELED' &&
+                        r.status !== 'REFUSED'
+                    );
+                    setHasReserved(found);
+                } catch {
+                    // Silent fail
+                }
+            }
+        };
+        checkReservation();
+    }, [isAuthenticated, eventId]);
 
     const handleReserve = async () => {
         if (!isAuthenticated) {
@@ -28,6 +49,7 @@ export default function ReserveButton({ eventId, isFull, canReserve }: Props) {
         try {
             await reservationsService.create({ eventId });
             toast.success('Reservation requested! Check your dashboard.');
+            setHasReserved(true);
             router.push('/dashboard');
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : 'Failed to reserve spot';
@@ -36,6 +58,14 @@ export default function ReserveButton({ eventId, isFull, canReserve }: Props) {
             setLoading(false);
         }
     };
+
+    if (hasReserved) {
+        return (
+            <button disabled className="btn-secondary opacity-50 cursor-not-allowed bg-emerald-50 text-emerald-600 border-emerald-100">
+                Reserving / Reserved
+            </button>
+        );
+    }
 
     if (isFull) {
         return (
