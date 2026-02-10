@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import { ToastProvider } from '@/context/ToastContext';
 import { AuthProvider } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
+import NetworkErrorHandler from '@/components/ui/NetworkErrorHandler';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,10 +20,14 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={inter.className}>
+                <a href="#main-content" className="skip-link">
+                    Skip to main content
+                </a>
                 <ToastProvider>
                     <AuthProvider>
+                        <NetworkErrorHandler />
                         <Navbar />
-                        <main className="pt-16 min-h-screen">
+                        <main id="main-content" className="pt-16 min-h-screen">
                             {children}
                         </main>
                     </AuthProvider>

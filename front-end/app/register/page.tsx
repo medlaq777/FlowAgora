@@ -254,8 +254,8 @@ export default function RegisterPage() {
                                     required
                                     className="apple-input"
                                     placeholder="Enter the secret code"
-                                    value={(form as any).secretCode}
-                                    onChange={(e) => setForm({ ...form, secretCode: e.target.value } as any)}
+                                    value={form.secretCode}
+                                    onChange={(e) => setForm({ ...form, secretCode: e.target.value })}
                                 />
                                 <p className="text-[11px] text-apple-gray-300 mt-1">
                                     Required for creating an Organizer account.

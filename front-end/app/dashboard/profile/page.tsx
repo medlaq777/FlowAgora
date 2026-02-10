@@ -5,6 +5,8 @@ import { useAuth } from '@/context/AuthContext';
 import { usersService, User } from '@/services/users.service';
 import { useToast } from '@/context/ToastContext';
 import Link from 'next/link';
+import Alert from '@/components/ui/Alert';
+import { ProfileHeaderSkeleton } from '@/components/ui/LoadingSkeleton';
 
 export default function ProfilePage() {
     const { user: authUser } = useAuth();
@@ -31,8 +33,8 @@ export default function ProfilePage() {
     }, [authUser, toast]);
 
     if (loading) return (
-        <div className="flex justify-center py-20">
-            <div className="w-8 h-8 border-2 border-apple-gray-200 border-t-apple-blue rounded-full animate-spin" />
+        <div className="max-w-3xl mx-auto px-6 py-12">
+            <ProfileHeaderSkeleton />
         </div>
     );
 
@@ -85,6 +87,25 @@ export default function ProfilePage() {
                         <label className="text-[13px] font-medium text-apple-gray-400 uppercase tracking-wide block mb-1">User ID</label>
                         <p className="text-[14px] font-mono text-apple-gray-500 bg-apple-gray-50 p-2 rounded-lg">{profile.id}</p>
                     </div>
+                </div>
+            </div>
+
+            {/* Security Section */}
+            <div className="apple-card p-8 mt-6">
+                <h3 className="text-[18px] font-semibold text-apple-black mb-4">Security</h3>
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between py-3 border-b border-apple-gray-100">
+                        <div>
+                            <p className="text-[15px] font-medium text-apple-black">Password</p>
+                            <p className="text-[13px] text-apple-gray-300 mt-0.5">Manage your account password</p>
+                        </div>
+                        <button className="text-[13px] font-medium text-apple-gray-400 cursor-not-allowed" disabled>
+                            Change Password
+                        </button>
+                    </div>
+                    <Alert variant="info" dismissible={false}>
+                        Profile editing and password management features are coming soon. Contact support if you need to update your information.
+                    </Alert>
                 </div>
             </div>
         </div>
