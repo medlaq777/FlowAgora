@@ -67,9 +67,9 @@ export default function AdminUsersPage() {
                                             <div className="w-8 h-8 rounded-full bg-apple-gray-100 flex items-center justify-center text-[12px] font-bold text-apple-gray-500">
                                                 {(user.firstName[0] || '') + (user.lastName[0] || '')}
                                             </div>
-                                            <span className="text-[14px] font-semibold text-apple-black">
+                                            <Link href={`/admin/users/${user.id}`} className="text-[14px] font-semibold text-apple-black hover:text-apple-blue hover:underline">
                                                 {user.firstName} {user.lastName}
-                                            </span>
+                                            </Link>
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 text-[14px] text-apple-gray-500">

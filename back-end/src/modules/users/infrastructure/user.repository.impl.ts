@@ -39,7 +39,9 @@ export class UserRepositoryImpl implements IUserRepository {
       userDocument.role as 'ADMIN' | 'PARTICIPANT',
       userDocument.password,
       userDocument.firstName,
+      userDocument.firstName,
       userDocument.lastName,
+      (userDocument as any).createdAt,
     );
   }
 }

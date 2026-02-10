@@ -1,27 +1,16 @@
-'use client';
-
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { eventsService, Event } from '@/services/events.service';
 import { format } from 'date-fns';
 
-export default function Home() {
-    const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
-    const [loading, setLoading] = useState(true);
+export const dynamic = 'force-dynamic';
 
-    useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const events = await eventsService.findUpcoming();
-                setUpcomingEvents(events);
-            } catch (error) {
-                console.error('Failed to fetch upcoming events', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchEvents();
-    }, []);
+export default async function Home() {
+    let upcomingEvents: Event[] = [];
+    try {
+        upcomingEvents = await eventsService.findUpcoming();
+    } catch (error) {
+        console.error('Failed to fetch upcoming events', error);
+    }
 
     return (
         <div>
@@ -78,11 +67,7 @@ export default function Home() {
                     </p>
                 </div>
 
-                {loading ? (
-                    <div className="flex justify-center">
-                        <div className="w-8 h-8 border-2 border-apple-gray-200 border-t-apple-blue rounded-full animate-spin" />
-                    </div>
-                ) : upcomingEvents.length === 0 ? (
+                {upcomingEvents.length === 0 ? (
                     <div className="text-center py-16">
                         <div className="w-14 h-14 mx-auto mb-5 rounded-2xl bg-apple-gray-50 flex items-center justify-center">
                             <svg className="w-6 h-6 text-apple-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">

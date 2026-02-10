@@ -29,4 +29,8 @@ export const usersService = {
   getProfile: async (): Promise<User> => {
     return api.get<User>('/users/profile');
   },
+
+  findOne: async (id: string): Promise<User> => {
+    return api.get<User>(`/users/${id}`);
+  },
 };
