@@ -1,26 +1,62 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  --font-sans: var(--font-inter), Inter, sans-serif;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-apple-gray-50: #F5F5F7;
+  --color-apple-gray-100: #E8E8ED;
+  --color-apple-gray-200: #D2D2D7;
+  --color-apple-gray-300: #86868B;
+  --color-apple-gray-400: #6E6E73;
+  --color-apple-gray-500: #424245;
+  --color-apple-black: #1D1D1F;
+  --color-apple-blue: #0071E3;
+  --color-apple-dark-blue: #0055b3;
+  --color-apple-red: #FF3B30;
+  --color-apple-green: #34C759;
+  --color-apple-orange: #FF9500;
+  --color-apple-purple: #AF52DE;
+  --color-apple-teal: #5AC8FA;
+  
+  --animate-fade-in: fadeIn 0.6s ease-out forwards;
+  --animate-fade-in-up: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  body {
+    @apply text-apple-black bg-white antialiased font-sans;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-apple-blue text-white font-medium transition-all duration-300 hover:bg-apple-dark-blue active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed text-sm px-5 py-2;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-full bg-apple-gray-100 text-apple-black font-medium transition-all duration-300 hover:bg-apple-gray-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed text-sm px-5 py-2;
+  }
+
+  .apple-card {
+    @apply bg-white rounded-3xl border border-apple-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)];
+  }
+  
+  .apple-input {
+    @apply w-full rounded-xl border border-apple-gray-200 px-4 py-3 text-[15px] outline-none transition-all duration-200 focus:border-apple-blue focus:ring-4 focus:ring-apple-blue/10 placeholder:text-apple-gray-300;
+  }
+  
+  .apple-label {
+    @apply block text-[13px] font-medium text-apple-gray-400 mb-1.5 ml-1;
+  }
 }

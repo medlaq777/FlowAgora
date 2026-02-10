@@ -1,67 +1,82 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-
-interface User {
-  email: string;
-  role: string;
-  sub: string;
-}
+import { authService, LoginDto } from '@/services/auth.service';
+import { usersService, User } from '@/services/users.service';
+import { useToast } from './ToastContext';
 
 interface AuthContextType {
   user: User | null;
-  token: string | null;
-  login: (token: string) => void;
+  loading: boolean;
+  login: (credentials: LoginDto) => Promise<void>;
   logout: () => void;
-  isLoading: boolean;
+  isAuthenticated: boolean;
+  isAdmin: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const toast = useToast();
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    if (storedToken) {
-      setToken(storedToken);
-      try {
-        const payload = JSON.parse(atob(storedToken.split('.')[1]));
-        setUser({ email: payload.email, role: payload.role, sub: payload.sub });
-      } catch (e) {
-        console.error('Invalid token format', e);
-        localStorage.removeItem('token');
-        setToken(null);
+    const initAuth = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const profile = await usersService.getProfile();
+          setUser(profile);
+        } catch {
+          localStorage.removeItem('token');
+          setUser(null);
+        }
       }
-    }
-    setIsLoading(false);
+      setLoading(false);
+    };
+    initAuth();
   }, []);
 
-  const login = (newToken: string) => {
-    localStorage.setItem('token', newToken);
-    setToken(newToken);
+  const login = async (credentials: LoginDto) => {
     try {
-      const payload = JSON.parse(atob(newToken.split('.')[1]));
-      setUser({ email: payload.email, role: payload.role, sub: payload.sub });
-      router.push('/');
-    } catch (e) {
-      console.error('Login failed: invalid token', e);
+      const response = await authService.login(credentials);
+      localStorage.setItem('token', response.access_token);
+
+      const profile = await usersService.getProfile();
+      setUser(profile);
+
+      toast.success('Welcome back!');
+
+      if (profile.role === 'ADMIN') {
+        router.push('/admin');
+      } else {
+        router.push('/dashboard');
+      }
+    } catch (error) {
+      toast.error('Invalid credentials');
+      throw error;
     }
   };
 
   const logout = () => {
     localStorage.removeItem('token');
-    setToken(null);
     setUser(null);
     router.push('/login');
+    toast.info('Logged out successfully');
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isLoading }}>
+    <AuthContext.Provider value={{
+      user,
+      loading,
+      login,
+      logout,
+      isAuthenticated: !!user,
+      isAdmin: user?.role === 'ADMIN'
+    }}>
       {children}
     </AuthContext.Provider>
   );
@@ -70,14 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useAuth must be used within a AuthProvider');
   }
   return context;
 }
-
-export const getToken = () => {
-    if (typeof window !== 'undefined') {
-        return localStorage.getItem('token');
-    }
-    return null;
-};
