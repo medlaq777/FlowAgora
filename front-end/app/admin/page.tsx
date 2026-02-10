@@ -34,7 +34,6 @@ export default function AdminDashboardPage() {
 
     const publishedCount = events.filter(e => e.status === 'PUBLISHED').length;
     const draftCount = events.filter(e => e.status === 'DRAFT').length;
-    // const totalAttendees = events.reduce((acc, curr) => acc + (curr.reservedCount || 0), 0);
 
     return (
         <div className="max-w-7xl mx-auto px-6 py-10 animate-fade-in">
@@ -65,12 +64,6 @@ export default function AdminDashboardPage() {
                     <p className="text-[13px] font-medium text-apple-gray-400 uppercase tracking-wide">Drafts</p>
                     <p className="text-[36px] font-bold text-amber-500 mt-1 leading-none">{draftCount}</p>
                 </div>
-                {/*
-        <div className="apple-card p-6">
-           <p className="text-[13px] font-medium text-apple-gray-400 uppercase tracking-wide">Total Attendees</p>
-           <p className="text-[36px] font-bold text-apple-blue mt-1 leading-none">{totalAttendees}</p>
-        </div>
-        */}
             </div>
 
             {/* Events Table */}

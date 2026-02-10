@@ -62,18 +62,6 @@ export default function Error({
                     </details>
                 )}
 
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                    <button onClick={reset} className="btn-primary w-full sm:w-auto">
-                        Try Again
-                    </button>
-                    <button
-                        onClick={() => window.location.href = '/'}
-                        className="btn-secondary w-full sm:w-auto"
-                    >
-                        Go to Home
-                    </button>
-                </div>
-
                 <p className="mt-8 text-[13px] text-apple-gray-300">
                     If this problem persists, please{' '}
                     <a href="mailto:support@flowagora.com" className="text-apple-blue hover:underline">
