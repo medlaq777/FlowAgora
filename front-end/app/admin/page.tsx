@@ -107,7 +107,7 @@ export default function AdminDashboardPage() {
                                                     <span className="text-[15px] font-semibold text-apple-black group-hover:text-apple-blue transition-colors block">
                                                         {event.title}
                                                     </span>
-                                                    <span className="text-[13px] text-apple-gray-300 truncate max-w-[200px] block">
+                                                    <span className="text-[13px] text-apple-gray-300 truncate max-w-50 block">
                                                         {event.location}
                                                     </span>
                                                 </Link>

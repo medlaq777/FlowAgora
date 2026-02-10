@@ -8,7 +8,13 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiBody,
+} from '@nestjs/swagger';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -17,18 +23,20 @@ import { JwtAuthGuard } from '../../auth/infrastructure/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/infrastructure/guards/roles.guard';
 import { Roles } from '../../auth/infrastructure/decorators/roles.decorator';
 
-
 @ApiTags('Events')
 @Controller('events')
 export class EventsController {
-  constructor(private readonly eventsService: EventsService) {}
+  constructor(private readonly eventsService: EventsService) { }
 
   @ApiBearerAuth()
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @ApiOperation({ summary: 'Create a new event' })
-  @ApiResponse({ status: 201, description: 'The event has been successfully created.' })
+  @ApiResponse({
+    status: 201,
+    description: 'The event has been successfully created.',
+  })
   @ApiResponse({ status: 403, description: 'Forbidden. Requires ADMIN role.' })
   create(@Body() createEventDto: CreateEventDto) {
     return this.eventsService.create(createEventDto);
@@ -41,7 +49,6 @@ export class EventsController {
     return this.eventsService.findAllPublished();
   }
 
-  @ApiBearerAuth()
   @Get('admin')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
@@ -52,9 +59,24 @@ export class EventsController {
     return this.eventsService.findAll();
   }
 
+  @ApiBearerAuth()
+  @Get('admin/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @ApiOperation({ summary: 'Get event by ID (Admin)' })
+  @ApiResponse({ status: 200, description: 'Return the event.' })
+  @ApiResponse({ status: 403, description: 'Forbidden. Requires ADMIN role.' })
+  @ApiResponse({ status: 404, description: 'Event not found.' })
+  findOneAdmin(@Param('id') id: string) {
+    return this.eventsService.findOne(id);
+  }
+
   @Get('upcoming')
   @ApiOperation({ summary: 'Get upcoming published events' })
-  @ApiResponse({ status: 200, description: 'Return upcoming published events.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return upcoming published events.',
+  })
   findUpcoming() {
     return this.eventsService.findUpcoming();
   }
@@ -83,7 +105,10 @@ export class EventsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @ApiOperation({ summary: 'Update an event' })
-  @ApiResponse({ status: 200, description: 'The event has been successfully updated.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The event has been successfully updated.',
+  })
   @ApiResponse({ status: 403, description: 'Forbidden. Requires ADMIN role.' })
   update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
     return this.eventsService.update(id, updateEventDto);
@@ -94,13 +119,23 @@ export class EventsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @ApiOperation({ summary: 'Update event status' })
-  @ApiBody({ schema: { type: 'object', properties: { status: { type: 'string', enum: ['PUBLISHED', 'DRAFT', 'COMPLETED', 'CANCELLED'] } } } })
-  @ApiResponse({ status: 200, description: 'The event status has been successfully updated.' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        status: {
+          type: 'string',
+          enum: ['PUBLISHED', 'DRAFT', 'COMPLETED', 'CANCELLED'],
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The event status has been successfully updated.',
+  })
   @ApiResponse({ status: 403, description: 'Forbidden. Requires ADMIN role.' })
-  updateStatus(
-    @Param('id') id: string,
-    @Body('status') status: EventStatus,
-  ) {
+  updateStatus(@Param('id') id: string, @Body('status') status: EventStatus) {
     return this.eventsService.updateStatus(id, status);
   }
 }

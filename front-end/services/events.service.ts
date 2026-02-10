@@ -43,6 +43,10 @@ export const eventsService = {
     return api.get<Event>(`/events/${id}`);
   },
 
+  findOneAdmin: async (id: string): Promise<Event> => {
+    return api.get<Event>(`/events/admin/${id}`);
+  },
+
   update: async (id: string, data: UpdateEventDto): Promise<Event> => {
     return api.put<Event>(`/events/${id}`, data);
   },
