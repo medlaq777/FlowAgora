@@ -1,8 +1,3 @@
-/**
- * EmptyState Component
- * Displays a user-friendly empty state with optional icon, message, and CTA
- */
-
 import Link from 'next/link';
 
 export type EmptyStateIcon = 'calendar' | 'search' | 'users' | 'inbox' | 'alert' | 'custom';

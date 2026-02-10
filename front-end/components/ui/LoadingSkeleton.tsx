@@ -1,15 +1,7 @@
-/**
- * Loading Skeleton Components
- * Reusable skeleton loaders following Apple design aesthetic
- */
-
 interface SkeletonProps {
     className?: string;
 }
 
-/**
- * Base skeleton element with shimmer animation
- */
 export function Skeleton({ className = '' }: SkeletonProps) {
     return (
         <div
@@ -19,9 +11,6 @@ export function Skeleton({ className = '' }: SkeletonProps) {
     );
 }
 
-/**
- * Skeleton for event/content cards
- */
 export function CardSkeleton() {
     return (
         <div className="apple-card h-full flex flex-col overflow-hidden" aria-busy="true" aria-label="Loading content">
@@ -39,9 +28,6 @@ export function CardSkeleton() {
     );
 }
 
-/**
- * Skeleton for table rows
- */
 export function TableRowSkeleton({ columns = 4 }: { columns?: number }) {
     return (
         <tr className="border-b border-apple-gray-50">
@@ -54,9 +40,6 @@ export function TableRowSkeleton({ columns = 4 }: { columns?: number }) {
     );
 }
 
-/**
- * Complete table skeleton
- */
 export function TableSkeleton({ rows = 5, columns = 4 }: { rows?: number; columns?: number }) {
     return (
         <div className="overflow-x-auto" aria-busy="true" aria-label="Loading table">
@@ -80,9 +63,6 @@ export function TableSkeleton({ rows = 5, columns = 4 }: { rows?: number; column
     );
 }
 
-/**
- * Skeleton for form fields
- */
 export function FormFieldSkeleton() {
     return (
         <div className="space-y-1.5">
@@ -92,9 +72,6 @@ export function FormFieldSkeleton() {
     );
 }
 
-/**
- * Complete form skeleton
- */
 export function FormSkeleton({ fields = 4 }: { fields?: number }) {
     return (
         <div className="space-y-5" aria-busy="true" aria-label="Loading form">
@@ -106,9 +83,6 @@ export function FormSkeleton({ fields = 4 }: { fields?: number }) {
     );
 }
 
-/**
- * Skeleton for stat cards
- */
 export function StatCardSkeleton() {
     return (
         <div className="apple-card p-6" aria-busy="true" aria-label="Loading statistics">
@@ -118,9 +92,6 @@ export function StatCardSkeleton() {
     );
 }
 
-/**
- * Skeleton for user profile header
- */
 export function ProfileHeaderSkeleton() {
     return (
         <div className="flex items-center gap-5" aria-busy="true" aria-label="Loading profile">
@@ -134,9 +105,6 @@ export function ProfileHeaderSkeleton() {
     );
 }
 
-/**
- * Grid of card skeletons
- */
 export function CardGridSkeleton({ count = 6 }: { count?: number }) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" aria-busy="true" aria-label="Loading events">

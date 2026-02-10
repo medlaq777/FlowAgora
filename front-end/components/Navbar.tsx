@@ -25,8 +25,6 @@ export default function Navbar() {
                         FlowAgora
                     </span>
                 </Link>
-
-                {/* Desktop Navigation */}
                 <div className="hidden md:flex items-center gap-6 text-[13px] font-medium text-apple-gray-500">
                     <Link
                         href="/events"
@@ -87,8 +85,6 @@ export default function Navbar() {
                         </>
                     )}
                 </div>
-
-                {/* Mobile Menu Button */}
                 <button
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                     className="md:hidden p-2 text-apple-gray-500 hover:text-apple-black transition-colors"
@@ -104,8 +100,6 @@ export default function Navbar() {
                     </svg>
                 </button>
             </div>
-
-            {/* Mobile Menu */}
             {mobileMenuOpen && (
                 <div className="md:hidden border-t border-apple-gray-100 bg-white/95 backdrop-blur-md">
                     <div className="px-4 py-4 space-y-3">

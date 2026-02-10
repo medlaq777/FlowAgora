@@ -1,8 +1,3 @@
-/**
- * Alert Component
- * Inline alert/notification component with variants and dismissible option
- */
-
 'use client';
 
 import { useState } from 'react';

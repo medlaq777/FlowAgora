@@ -1,8 +1,3 @@
-/**
- * ErrorBoundary Component
- * Catches React runtime errors and displays user-friendly fallback UI
- */
-
 'use client';
 
 import { Component, ErrorInfo, ReactNode } from 'react';

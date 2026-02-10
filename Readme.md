@@ -8,13 +8,22 @@ This project addresses the challenges of manual event management (spreadsheets, 
 
 ## 📋 Table of Contents
 
-* [Context & Goals](#-context--goals)
-* [Features](#-features)
-* [Tech Stack](#-tech-stack)
-* [Business Rules](#️-business-rules)
-* [JIRA Roadmap & Planning](#-jira-roadmap--planning)
-* [Getting Started](#-getting-started)
-* [CI/CD Pipeline](#️-cicd-pipeline-github-actions)
+- [FlowAgora 🚀](#flowagora-)
+  - [📋 Table of Contents](#-table-of-contents)
+  - [🎯 Context \& Goals](#-context--goals)
+  - [✨ Features](#-features)
+    - [🔑 Roles \& Permissions](#-roles--permissions)
+  - [📊 JIRA Roadmap \& Planning](#-jira-roadmap--planning)
+    - [Key Epics](#key-epics)
+  - [⚖️ Business Rules](#️-business-rules)
+    - [Event Lifecycle](#event-lifecycle)
+    - [Reservation Rules](#reservation-rules)
+  - [🛠 Tech Stack](#-tech-stack)
+  - [🚀 Getting Started](#-getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+  - [⚙️ CI/CD Pipeline (GitHub Actions)](#️-cicd-pipeline-github-actions)
+  - [📝 Author](#-author)
 
 ---
 
@@ -22,10 +31,10 @@ This project addresses the challenges of manual event management (spreadsheets, 
 
 Managing workshops, training sessions, and internal meetings manually often leads to errors like overbooking and lack of real-time visibility. This application aims to:
 
-* **Centralize** all event and participant information.
-* **Automate** reservation workflows (Pending -> Confirmed).
-* **Enforce** strict role-based access control (Admin vs. Participant).
-* **Ensure** data integrity through rigorous validation and industrialization standards.
+- **Centralize** all event and participant information.
+- **Automate** reservation workflows (Pending -> Confirmed).
+- **Enforce** strict role-based access control (Admin vs. Participant).
+- **Ensure** data integrity through rigorous validation and industrialization standards.
 
 ---
 
@@ -60,26 +69,26 @@ The project is organized into 14 Epics to ensure full coverage of the technical 
 
 ### Event Lifecycle
 
-* **Status:** `DRAFT`, `PUBLISHED`, `CANCELED`.
-* Only `PUBLISHED` events are visible to participants.
+- **Status:** `DRAFT`, `PUBLISHED`, `CANCELED`.
+- Only `PUBLISHED` events are visible to participants.
 
 ### Reservation Rules
 
-* **Status:** `PENDING`, `CONFIRMED`, `REFUSED`, `CANCELED`.
-* A participant cannot book:
-  * An event that is canceled or not yet published.
-  * A full event (capacity limit reached).
-  * The same event twice (active reservation check).
-* **PDF Generation:** Only available for reservations with a `CONFIRMED` status.
+- **Status:** `PENDING`, `CONFIRMED`, `REFUSED`, `CANCELED`.
+- A participant cannot book:
+  - An event that is canceled or not yet published.
+  - A full event (capacity limit reached).
+  - The same event twice (active reservation check).
+- **PDF Generation:** Only available for reservations with a `CONFIRMED` status.
 
 ---
 
 ## 🛠 Tech Stack
 
-* **Frontend:** Next.js, TypeScript, Tailwind CSS, Redux.
-* **Backend:** NestJS, TypeScript, MongoDB (Mongoose).
-* **Testing:** Jest, SonarQube, React Testing Library.
-* **Infrastructure:** Docker, Docker Compose, GitHub Actions (CI/CD).
+- **Frontend:** Next.js, TypeScript, Tailwind CSS, UseContext.
+- **Backend:** NestJS, TypeScript, MongoDB (Mongoose).
+- **Testing:** Jest, SonarQube, React Testing Library.
+- **Infrastructure:** Docker, Docker Compose, GitHub Actions (CI/CD).
 
 ---
 
@@ -87,8 +96,8 @@ The project is organized into 14 Epics to ensure full coverage of the technical 
 
 ### Prerequisites
 
-* Node.js (v18+)
-* Docker & Docker Compose
+- Node.js (v18+)
+- Docker & Docker Compose
 
 ### Installation
 
@@ -117,10 +126,10 @@ This command will build and start all services defined in the `docker-compose.ym
 
 The project includes a mandatory pipeline that triggers on every `push` and `pull_request`:
 
-* **Install/Cache:** Fast dependency management.
-* **Lint:** Static code analysis.
-* **Tests:** Runs all unit and E2E tests.
-* **Build:** Verifies that both applications compile.
+- **Install/Cache:** Fast dependency management.
+- **Lint:** Static code analysis.
+- **Tests:** Runs all unit and E2E tests.
+- **Build:** Verifies that both applications compile.
 
 > ⚠️ Any failure in the steps above will block the merge to ensure production stability.
 

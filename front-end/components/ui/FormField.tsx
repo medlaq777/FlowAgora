@@ -1,8 +1,3 @@
-/**
- * FormField Component
- * Enhanced form field wrapper with validation, error messages, and accessibility
- */
-
 'use client';
 
 import { forwardRef, InputHTMLAttributes, TextareaHTMLAttributes } from 'react';
@@ -87,9 +82,6 @@ FormField.displayName = 'FormField';
 
 export default FormField;
 
-/**
- * Select Field Component
- */
 interface SelectFieldProps extends BaseFormFieldProps {
     children: React.ReactNode;
     value?: string;
