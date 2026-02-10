@@ -1,0 +1,52 @@
+services:
+  frontend:
+    container_name: flowagora-frontend
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
+      - API_URL_INTERNAL=http://backend:3001
+    depends_on:
+      - backend
+    networks:
+      - flowagora-network
+    restart: unless-stopped
+
+  backend:
+    container_name: flowagora-backend
+    build:
+      context: ./back-end
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/FlowAgora
+      - PORT=3001
+      - JWT_SECRET=${JWT_SECRET:-medlaq777medlaq777}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-1m}
+    depends_on:
+      - mongo
+    networks:
+      - flowagora-network
+    restart: unless-stopped
+
+  mongo:
+    container_name: flowagora-mongo
+    image: mongo:7.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - flowagora-network
+    restart: unless-stopped
+
+networks:
+  flowagora-network:
+    driver: bridge
+
+volumes:
+  mongo-data:

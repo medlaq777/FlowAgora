@@ -12,6 +12,49 @@ interface Props {
     canReserve: boolean;
 }
 
+const RESERVATION_STATUS_CONFIG = {
+    PENDING: {
+        color: 'bg-amber-50 text-amber-700 border-amber-200',
+        icon: (
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        ),
+        message: 'Your reservation is pending approval',
+        description: 'The event organizer will review and confirm your reservation soon.'
+    },
+    CONFIRMED: {
+        color: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        icon: (
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        ),
+        message: 'Your reservation is confirmed!',
+        description: 'You can download your ticket from your dashboard.'
+    },
+    REFUSED: {
+        color: 'bg-red-50 text-red-700 border-red-200',
+        icon: (
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        ),
+        message: 'Your reservation was declined',
+        description: 'Unfortunately, your reservation was not approved. You can try other events.'
+    },
+    CANCELED: {
+        color: 'bg-gray-50 text-gray-700 border-gray-200',
+        icon: (
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        ),
+        message: 'Reservation cancelled',
+        description: 'You have cancelled this reservation.'
+    }
+};
+
 export default function ReserveButton({ eventId, isFull, canReserve }: Props) {
     const { isAuthenticated } = useAuth();
     const router = useRouter();
@@ -22,7 +65,7 @@ export default function ReserveButton({ eventId, isFull, canReserve }: Props) {
     const [checkingReservation, setCheckingReservation] = useState(true);
 
     useEffect(() => {
-        const checkReservation = async () => {
+        const checkExistingReservation = async () => {
             if (!isAuthenticated) {
                 setCheckingReservation(false);
                 return;
@@ -30,13 +73,13 @@ export default function ReserveButton({ eventId, isFull, canReserve }: Props) {
 
             try {
                 const reservations = await reservationsService.findAllMine();
-                const existing = reservations.find((r) => {
+                const existingReservation = reservations.find((r) => {
                     const resEventId = typeof r.eventId === 'string' ? r.eventId : r.eventId._id;
                     return resEventId === eventId;
                 });
-                if (existing) {
+                if (existingReservation) {
                     setHasReserved(true);
-                    setReservationStatus(existing.status);
+                    setReservationStatus(existingReservation.status);
                 }
             } catch (error) {
                 console.error('Failed to check reservation', error);
@@ -45,7 +88,7 @@ export default function ReserveButton({ eventId, isFull, canReserve }: Props) {
             }
         };
 
-        checkReservation();
+        checkExistingReservation();
     }, [eventId, isAuthenticated]);
 
     const handleReserve = async () => {
@@ -81,50 +124,8 @@ export default function ReserveButton({ eventId, isFull, canReserve }: Props) {
     }
 
     if (hasReserved) {
-        const statusConfig = {
-            PENDING: {
-                color: 'bg-amber-50 text-amber-700 border-amber-200',
-                icon: (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                ),
-                message: 'Your reservation is pending approval',
-                description: 'The event organizer will review and confirm your reservation soon.'
-            },
-            CONFIRMED: {
-                color: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-                icon: (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                ),
-                message: 'Your reservation is confirmed!',
-                description: 'You can download your ticket from your dashboard.'
-            },
-            REFUSED: {
-                color: 'bg-red-50 text-red-700 border-red-200',
-                icon: (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                ),
-                message: 'Your reservation was declined',
-                description: 'Unfortunately, your reservation was not approved. You can try other events.'
-            },
-            CANCELED: {
-                color: 'bg-gray-50 text-gray-700 border-gray-200',
-                icon: (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                ),
-                message: 'Reservation cancelled',
-                description: 'You have cancelled this reservation.'
-            }
-        };
-
-        const config = statusConfig[reservationStatus as keyof typeof statusConfig] || statusConfig.PENDING;
+        const config = RESERVATION_STATUS_CONFIG[reservationStatus as keyof typeof RESERVATION_STATUS_CONFIG]
+            || RESERVATION_STATUS_CONFIG.PENDING;
 
         return (
             <div className="space-y-3">

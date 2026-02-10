@@ -7,17 +7,15 @@ import Link from 'next/link';
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { login } = useAuth();
     const [loading, setLoading] = useState(false);
+    const { login } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         try {
             await login({ email, password });
-            // Redirect handled in AuthContext
         } catch {
-            // Error handled in AuthContext (Toast)
         } finally {
             setLoading(false);
         }

@@ -4,6 +4,12 @@ import { format } from 'date-fns';
 
 export const dynamic = 'force-dynamic';
 
+const STATS = [
+    { value: '500+', label: 'Events Hosted' },
+    { value: '10K+', label: 'Happy Attendees' },
+    { value: '98%', label: 'Satisfaction' },
+];
+
 export default async function Home() {
     let upcomingEvents: Event[] = [];
     try {
@@ -14,7 +20,6 @@ export default async function Home() {
 
     return (
         <div>
-            {/* ── Hero ── */}
             <section className="pt-28 pb-20 px-6">
                 <div className="max-w-170 mx-auto text-center animate-fade-in-up">
                     <h1 className="text-[44px] md:text-[56px] lg:text-[72px] font-semibold text-apple-black tracking-[-0.04em] leading-[1.05] mb-5">
@@ -38,25 +43,23 @@ export default async function Home() {
                 </div>
             </section>
 
-            {/* ── Stats ── */}
             <section className="border-y border-black/4">
                 <div className="max-w-245 mx-auto px-6 py-5">
                     <div className="grid grid-cols-3 divide-x divide-apple-gray-100">
-                        {[
-                            { value: '500+', label: 'Events Hosted' },
-                            { value: '10K+', label: 'Happy Attendees' },
-                            { value: '98%', label: 'Satisfaction' },
-                        ].map((stat) => (
+                        {STATS.map((stat) => (
                             <div key={stat.label} className="text-center px-4">
-                                <p className="text-[28px] md:text-[32px] font-semibold text-apple-black tracking-[-0.02em]">{stat.value}</p>
-                                <p className="text-[12px] text-apple-gray-300 mt-0.5">{stat.label}</p>
+                                <p className="text-[28px] md:text-[32px] font-semibold text-apple-black tracking-[-0.02em]">
+                                    {stat.value}
+                                </p>
+                                <p className="text-[12px] text-apple-gray-300 mt-0.5">
+                                    {stat.label}
+                                </p>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* ── Featured Events ── */}
             <section className="max-w-245 mx-auto px-6 py-24">
                 <div className="text-center mb-16">
                     <h2 className="text-[32px] md:text-[40px] font-semibold text-apple-black tracking-[-0.03em] mb-3">
@@ -90,8 +93,12 @@ export default async function Home() {
                                     <div className="h-45 relative overflow-hidden rounded-t-2xl bg-apple-gray-50">
                                         <div className="absolute inset-0 flex items-center justify-center">
                                             <div className="text-center">
-                                                <p className="text-[40px] font-semibold text-apple-black/80 leading-none">{format(new Date(event.date), 'dd')}</p>
-                                                <p className="text-[13px] font-medium text-apple-gray-300 uppercase tracking-wider mt-1">{format(new Date(event.date), 'MMM')}</p>
+                                                <p className="text-[40px] font-semibold text-apple-black/80 leading-none">
+                                                    {format(new Date(event.date), 'dd')}
+                                                </p>
+                                                <p className="text-[13px] font-medium text-apple-gray-300 uppercase tracking-wider mt-1">
+                                                    {format(new Date(event.date), 'MMM')}
+                                                </p>
                                             </div>
                                         </div>
                                     </div>

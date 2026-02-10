@@ -1,12 +1,10 @@
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const path = require("path");
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactCompiler: true,
+  output: 'standalone',
   turbopack: {
-    root: path.resolve(__dirname),
+    root: process.cwd(),
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

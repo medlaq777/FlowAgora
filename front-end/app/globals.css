@@ -38,12 +38,10 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Accessibility: Focus indicators for keyboard navigation */
   *:focus-visible {
     @apply outline-none ring-2 ring-apple-blue ring-offset-2 rounded-md;
   }
 
-  /* Respect user's motion preferences */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -54,7 +52,6 @@
     }
   }
 
-  /* Mobile touch optimization */
   @media (hover: none) and (pointer: coarse) {
     button, a {
       -webkit-tap-highlight-color: transparent;
@@ -65,7 +62,6 @@
 @layer components {
   .btn-primary {
     @apply inline-flex items-center justify-center rounded-full bg-apple-blue text-white font-medium transition-all duration-300 hover:bg-apple-dark-blue active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed text-sm px-5 py-2;
-    /* Mobile: Larger touch targets */
     @media (max-width: 768px) {
       @apply px-6 py-3 text-base min-h-[44px];
     }
@@ -73,7 +69,6 @@
 
   .btn-secondary {
     @apply inline-flex items-center justify-center rounded-full bg-apple-gray-100 text-apple-black font-medium transition-all duration-300 hover:bg-apple-gray-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed text-sm px-5 py-2;
-    /* Mobile: Larger touch targets */
     @media (max-width: 768px) {
       @apply px-6 py-3 text-base min-h-[44px];
     }
@@ -81,7 +76,6 @@
 
   .apple-card {
     @apply bg-white rounded-3xl border border-apple-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)];
-    /* Mobile: Reduce border radius */
     @media (max-width: 768px) {
       @apply rounded-2xl;
     }
@@ -89,7 +83,6 @@
   
   .apple-input {
     @apply w-full rounded-xl border border-apple-gray-200 px-4 py-3 text-[15px] outline-none transition-all duration-200 focus:border-apple-blue focus:ring-4 focus:ring-apple-blue/10 placeholder:text-apple-gray-300;
-    /* Mobile: Larger text and padding */
     @media (max-width: 768px) {
       @apply text-base px-4 py-3.5 min-h-[44px];
     }
@@ -97,13 +90,11 @@
   
   .apple-label {
     @apply block text-[13px] font-medium text-apple-gray-400 mb-1.5 ml-1;
-    /* Mobile: Slightly larger */
     @media (max-width: 768px) {
       @apply text-sm;
     }
   }
 
-  /* Screen reader only utility */
   .sr-only {
     position: absolute;
     width: 1px;
@@ -116,17 +107,14 @@
     border-width: 0;
   }
 
-  /* Skip to main content link */
   .skip-link {
     @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-apple-blue focus:text-white focus:rounded-lg focus:shadow-lg;
   }
 
-  /* Responsive container */
   .responsive-container {
     @apply px-4 sm:px-6 lg:px-8;
   }
 
-  /* Mobile-friendly table */
   @media (max-width: 768px) {
     .mobile-table-card {
       @apply block;
